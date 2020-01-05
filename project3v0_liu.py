@@ -36,7 +36,7 @@ def test_f(func,draw=0,start=1,done=64):
             save=copy.deepcopy(digits.data[i])
             #print(save)
             for change_ele in change_lis:
-                digits.data[i][change_ele]=func(digits.data[i][change_ele])
+                digits.data[i]=func(change_ele,digits.data[i])
             
             yp=model.predict([digits.data[i]])
             if yp[0]!=digits.target[i]:
@@ -57,10 +57,28 @@ def test_f(func,draw=0,start=1,done=64):
         correctness.append(count_error/count)
     return test_lis,correctness
 
-#test_lis,correctness=test_f(lambda n: 0,1,done=5)
-#test_lis,correctness=test_f(lambda n: int(random.randint(500,1500)*n/1000),1,start=60)
-#test_lis,correctness=test_f(lambda n: n,1,done=5)
-#print(dict(zip(test_lis,correctness)))
+def test_0(n,pic):
+    return pic
+def test_1(n,pic):
+    pic[n]=0
+    return pic
+def test_2(n,pic):
+    pic[n]=int(random.randint(500,1500)*pic[n]/1000)
+    return pic
+def test_3(n,pic):
+    cross=[n+1,n-1,n+8,n-8]
+    for ele in cross:
+        try:
+            pic[ele]=pic[n]
+        except:
+            continue
+    return pic
+
+#test_lis,correctness=test_f(test_1,1,done=5)
+#test_lis,correctness=test_f(test_2,1,start=60)
+#test_lis,correctness=test_f(test_0,1,done=5)
+test_lis,correctness=test_f(test_3,1,done=5)
+print(dict(zip(test_lis,correctness)))
 
             
 
